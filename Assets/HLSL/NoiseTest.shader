@@ -1,14 +1,21 @@
 Shader "NoiseTest/HLSL/NoiseTest"
 {
+    Properties
+    {
+        [KeywordEnum(CNOISE, PNOISE, SNOISE, SNOISE_AGRAD, SNOISE_NGRAD)] _Type ("Type", Int) = 0
+        [Toggle(THREED)] _Threed ("Threed", Int) = 0
+        [Toggle(FRACTAL)] _Fractal ("Fractal", Int) = 0
+    }
+
     CGINCLUDE
 
-    #pragma multi_compile CNOISE PNOISE SNOISE SNOISE_AGRAD SNOISE_NGRAD
+    #pragma multi_compile _TYPE_CNOISE _TYPE_PNOISE _TYPE_SNOISE _TYPE_SNOISE_AGRAD _TYPE_SNOISE_NGRAD
     #pragma multi_compile _ THREED
     #pragma multi_compile _ FRACTAL
 
     #include "UnityCG.cginc"
 
-    #if !defined(CNOISE) && !defined(PNOISE)
+    #if !defined(_TYPE_CNOISE) && !defined(_TYPE_PNOISE)
         #if defined(THREED)
             #include "SimplexNoise3D.hlsl"
         #else
@@ -36,7 +43,7 @@ Shader "NoiseTest/HLSL/NoiseTest"
 
         float2 uv = i.uv * 4.0 + float2(0.2, 1) * _Time.y;
 
-        #if defined(SNOISE_AGRAD) || defined(SNOISE_NGRAD)
+        #if defined(_TYPE_SNOISE_AGRAD) || defined(_TYPE_SNOISE_NGRAD)
             #if defined(THREED)
                 float3 o = 0.5;
             #else
@@ -48,7 +55,7 @@ Shader "NoiseTest/HLSL/NoiseTest"
 
         float s = 1.0;
 
-        #if defined(SNOISE)
+        #if defined(_TYPE_SNOISE)
             float w = 0.25;
         #else
             float w = 0.5;
@@ -66,15 +73,15 @@ Shader "NoiseTest/HLSL/NoiseTest"
                 float2 period = s * 2.0;
             #endif
 
-            #if defined(CNOISE)
+            #if defined(_TYPE_CNOISE)
                 o += cnoise(coord) * w;
-            #elif defined(PNOISE)
+            #elif defined(_TYPE_PNOISE)
                 o += pnoise(coord, period) * w;
-            #elif defined(SNOISE)
+            #elif defined(_TYPE_SNOISE)
                 o += snoise(coord) * w;
-            #elif defined(SNOISE_AGRAD)
+            #elif defined(_TYPE_SNOISE_AGRAD)
                 o += snoise_grad(coord) * w;
-            #else // SNOISE_NGRAD
+            #else // _TYPE_SNOISE_NGRAD
                 #if defined(THREED)
                     float v0 = snoise(coord);
                     float vx = snoise(coord + float3(epsilon, 0, 0));
@@ -93,7 +100,7 @@ Shader "NoiseTest/HLSL/NoiseTest"
             w *= 0.5;
         }
 
-        #if defined(SNOISE_AGRAD) || defined(SNOISE_NGRAD)
+        #if defined(_TYPE_SNOISE_AGRAD) || defined(_TYPE_SNOISE_NGRAD)
             #if defined(THREED)
                 return float4(o, 1);
             #else

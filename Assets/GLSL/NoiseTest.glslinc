@@ -1,13 +1,13 @@
 #include "UnityCG.glslinc"
 #include "GLSLSupport.glslinc"
 
-#if defined(SNOISE) || defined(SNOISE_NGRAD)
+#if defined(_TYPE_SNOISE) || defined(_TYPE_SNOISE_NGRAD)
     #if defined(THREED)
         #include "SimplexNoise3D.glsl"
     #else
         #include "SimplexNoise2D.glsl"
     #endif
-#elif defined(SNOISE_AGRAD)
+#elif defined(_TYPE_SNOISE_AGRAD)
     #if defined(THREED)
         #include "SimplexNoiseGrad3D.glsl"
     #else
@@ -43,7 +43,7 @@ void main()
 
     vec2 uv = uv.xy * 4.0 + vec2(0.2, 1.0) * _Time.y;
 
-    #if defined(SNOISE_AGRAD) || defined(SNOISE_NGRAD)
+    #if defined(_TYPE_SNOISE_AGRAD) || defined(_TYPE_SNOISE_NGRAD)
         #if defined(THREED)
             vec3 o = vec3(0.5);
         #else
@@ -55,7 +55,7 @@ void main()
 
     float s = 1.0;
 
-    #if defined(SNOISE)
+    #if defined(_TYPE_SNOISE)
         float w = 0.25;
     #else
         float w = 0.5;
@@ -73,15 +73,15 @@ void main()
             vec2 period = vec2(s) * 2.0;
         #endif
 
-        #if defined(CNOISE)
+        #if defined(_TYPE_CNOISE)
             o += cnoise(coord) * w;
-        #elif defined(PNOISE)
+        #elif defined(_TYPE_PNOISE)
             o += pnoise(coord, period) * w;
-        #elif defined(SNOISE)
+        #elif defined(_TYPE_SNOISE)
             o += snoise(coord) * w;
-        #elif defined(SNOISE_AGRAD)
+        #elif defined(_TYPE_SNOISE_AGRAD)
             o += snoise_grad(coord) * w;
-        #else // SNOISE_NGRAD
+        #else // _TYPE_SNOISE_NGRAD
             #if defined(THREED)
                 float v0 = snoise(coord);
                 float vx = snoise(coord + vec3(epsilon, 0, 0));
@@ -100,7 +100,7 @@ void main()
         w *= 0.5;
     }
 
-    #if defined(SNOISE_AGRAD) || defined(SNOISE_NGRAD)
+    #if defined(_TYPE_SNOISE_AGRAD) || defined(_TYPE_SNOISE_NGRAD)
         #if defined(THREED)
             gl_FragColor = vec4(o, 1);
         #else

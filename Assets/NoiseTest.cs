@@ -37,15 +37,15 @@ public class NoiseTest : MonoBehaviour
         _material.shaderKeywords = null;
 
         if (_noiseType == NoiseType.ClassicPerlin)
-            _material.EnableKeyword("CNOISE");
+            _material.EnableKeyword("_TYPE_CNOISE");
         else if (_noiseType == NoiseType.PeriodicPerlin)
-            _material.EnableKeyword("PNOISE");
+            _material.EnableKeyword("_TYPE_PNOISE");
         else if (_noiseType == NoiseType.Simplex)
-            _material.EnableKeyword("SNOISE");
+            _material.EnableKeyword("_TYPE_SNOISE");
         else if (_noiseType == NoiseType.SimplexNumericalGrad)
-            _material.EnableKeyword("SNOISE_NGRAD");
+            _material.EnableKeyword("_TYPE_SNOISE_NGRAD");
         else // SimplexAnalyticalGrad
-            _material.EnableKeyword("SNOISE_AGRAD");
+            _material.EnableKeyword("_TYPE_SNOISE_AGRAD");
 
         if (_is3D)
             _material.EnableKeyword("THREED");
