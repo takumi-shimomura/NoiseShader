@@ -8,7 +8,7 @@ Shader "NoiseTest/HLSL/NoiseTest"
 
     #include "UnityCG.cginc"
 
-    #if !defined(CNOISE)
+    #if !defined(CNOISE) && !defined(PNOISE)
         #if defined(THREED)
             #include "SimplexNoise3D.hlsl"
         #else
